@@ -5,40 +5,49 @@ static int windowHeight = 350;
 
 static int speed = 1;
 
+static int direction{10};
+
 int main()
 {
     InitWindow(windowWidth, windowHeight, "window");
 
-    Vector2 currPos = Vector2 {windowWidth / 2, windowHeight / 2};
+    Vector2 circleCurrPos = Vector2 {(windowWidth / 2) - 50, (windowHeight / 2 ) - 50};
+    Vector2 axeCurrPos = Vector2 {windowWidth / 2, windowHeight / 2};
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(RED);
+        ClearBackground(BLACK);
 
-        DrawCircle(currPos.x, currPos.y, 10.0f, BLUE);
+        DrawCircle(circleCurrPos.x, circleCurrPos.y, 10.0f, BLUE);
+        DrawRectangle(axeCurrPos.x, axeCurrPos.y, 50, 20, RED);
+
+        if(axeCurrPos.y > windowHeight || axeCurrPos.y < 0)
+            direction = -direction;
+
+        axeCurrPos.y += direction;
 
         if(IsKeyDown(KEY_R))
         {
-            currPos = Vector2 {windowWidth / 2, windowHeight / 2};
+            circleCurrPos = Vector2 {windowWidth / 2, windowHeight / 2};
         }
 
-        if(IsKeyDown(KEY_W) && currPos.y > 0)
+        if(IsKeyDown(KEY_W) && circleCurrPos.y > 0)
         {
-            currPos.y -= speed;
+            circleCurrPos.y -= speed;
         }
-        if(IsKeyDown(KEY_S) && currPos.y < windowHeight)
+        if(IsKeyDown(KEY_S) && circleCurrPos.y < windowHeight)
         {
-            currPos.y += speed;
+            circleCurrPos.y += speed;
         }
-        if(IsKeyDown(KEY_D) && currPos.x < windowWidth)
+        if(IsKeyDown(KEY_D) && circleCurrPos.x < windowWidth)
         {
-            currPos.x += speed;
+            circleCurrPos.x += speed;
         }
-        if(IsKeyDown(KEY_A) && currPos.x > 0)
+        if(IsKeyDown(KEY_A) && circleCurrPos.x > 0)
         {
-            currPos.x -= speed;
+            circleCurrPos.x -= speed;
         }
 
         EndDrawing();
