@@ -1,55 +1,126 @@
 #include "raylib.h"
-
-static int windowWidth = 350;
-static int windowHeight = 350;
-
-static int speed = 1;
-
-static int direction{10};
-
 int main()
 {
-    InitWindow(windowWidth, windowHeight, "window");
+    int width{700};
+    int height{500};
+    InitWindow( width, height, "Collision Game");
 
-    Vector2 circleCurrPos = Vector2 {(windowWidth / 2) - 50, (windowHeight / 2 ) - 50};
-    Vector2 axeCurrPos = Vector2 {windowWidth / 2, windowHeight / 2};
+    int Circle_x{350};
+    int Circle_y{250};
+    int Circle_Radius{25};
+    int l_circle_x = Circle_x - Circle_Radius;
+    int r_circle_x = Circle_x + Circle_Radius;
+    int u_circle_y = Circle_y - Circle_Radius;
+    int b_circle_y = Circle_y + Circle_Radius;
 
-    SetTargetFPS(60);
-    while (!WindowShouldClose())
+    int axe_x{200};
+    int axe_y{0};
+    int axe_length{50};
+    int l_axe_x = axe_x;
+    int r_axe_x = axe_x + axe_length;
+    int u_axe_y = axe_y;
+    int b_axe_y = axe_y + axe_length;
+
+    int axe_x2{400};
+    int axe_y2{0};
+    int l_axe_x2 = axe_x2;
+    int r_axe_x2 = axe_x2 + axe_length;
+    int u_axe_y2 = axe_y2;
+    int b_axe_y2 = axe_y2 + axe_length;
+
+    bool Collision_with_axe =
+                               b_axe_y >= u_circle_y&&
+                              u_axe_y <= b_circle_y&&
+                              l_circle_x <= r_axe_x&&
+                              r_circle_x >= l_axe_x;
+
+     bool Collision_with_axe2 = 
+                              b_axe_y2 >= u_circle_y&&
+                              u_axe_y2 <= b_circle_y&&
+                              l_circle_x <= r_axe_x2&&
+                              r_circle_x >= l_axe_x2;  
+    int direction{10};
+    int direction2{10};
+    SetTargetFPS(30);
+    while(WindowShouldClose()==false)
     {
-        BeginDrawing();
-        ClearBackground(BLACK);
+      BeginDrawing();
+      ClearBackground(BLUE);
+      if(Collision_with_axe || Collision_with_axe2)
+      {
+        DrawText("GameOver",400,200,40,RED);
+       if( IsKeyDown(KEY_R) )
+       {
+         Collision_with_axe2 = false;
+         Collision_with_axe = false;
+         Circle_x = 350;
+         Circle_y = 250;
+       }
+      }
+      else
+      {
+        int l_circle_x = Circle_x - Circle_Radius;
+        int r_circle_x = Circle_x + Circle_Radius;
+        int u_circle_y = Circle_y - Circle_Radius;
+        int b_circle_y = Circle_y + Circle_Radius;
 
-        DrawCircle(circleCurrPos.x, circleCurrPos.y, 10.0f, BLUE);
-        DrawRectangle(axeCurrPos.x, axeCurrPos.y, 50, 20, RED);
+        int l_axe_x = axe_x;
+        int r_axe_x = axe_x + axe_length;
+        int u_axe_y = axe_y;
+        int b_axe_y = axe_y + axe_length;
 
-        if(axeCurrPos.y > windowHeight || axeCurrPos.y < 0)
-            direction = -direction;
+        int l_axe_x2 =axe_x2;
+        int r_axe_x2 =axe_x2 + axe_length;
+        int u_axe_y2 = axe_y2;
+        int b_axe_y2 = axe_y2 + axe_length;
 
-        axeCurrPos.y += direction;
+        Collision_with_axe =
+                              b_axe_y >= u_circle_y&&
+                              u_axe_y <= b_circle_y&&
+                              l_circle_x <= r_axe_x&&
+                              r_circle_x >= l_axe_x;
 
-        if(IsKeyDown(KEY_R))
-        {
-            circleCurrPos = Vector2 {windowWidth / 2, windowHeight / 2};
-        }
+         Collision_with_axe2 = 
+                              b_axe_y2 >= u_circle_y&&
+                              u_axe_y2 <= b_circle_y&&
+                              l_circle_x <= r_axe_x2&&
+                              r_circle_x >= l_axe_x2; 
 
-        if(IsKeyDown(KEY_W) && circleCurrPos.y > 0)
-        {
-            circleCurrPos.y -= speed;
-        }
-        if(IsKeyDown(KEY_S) && circleCurrPos.y < windowHeight)
-        {
-            circleCurrPos.y += speed;
-        }
-        if(IsKeyDown(KEY_D) && circleCurrPos.x < windowWidth)
-        {
-            circleCurrPos.x += speed;
-        }
-        if(IsKeyDown(KEY_A) && circleCurrPos.x > 0)
-        {
-            circleCurrPos.x -= speed;
-        }
+        DrawCircle(Circle_x, Circle_y, Circle_Radius, RED);
+        DrawRectangle(axe_x, axe_y, axe_length, axe_length, RED);
+        DrawRectangle(axe_x2, axe_y2, axe_length, axe_length, RED);
 
-        EndDrawing();
+      }
+      axe_y += direction;
+      axe_y2 += direction2;
+      if(axe_y > height||axe_y < 0)
+      {
+        direction = -direction;
+      }
+      if(axe_y2 > height||axe_y < 0)
+      {
+        direction2 = -direction2;
+      }
+
+      if(IsKeyDown(KEY_D) && Circle_x < width)
+      {
+        Circle_x = Circle_x + 10;
+      }
+
+      if(IsKeyDown(KEY_A) && Circle_x > 0)
+      {
+        Circle_x -= 10;
+      }
+      
+      if(IsKeyDown(KEY_S) && Circle_y < height)
+      {
+        Circle_y += 10;
+      }
+      if(IsKeyDown(KEY_W) && Circle_y > 0)
+      {
+        Circle_y -= 10;
+      }
+      
+      EndDrawing();
     }
 }
